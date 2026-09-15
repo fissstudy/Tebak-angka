@@ -116,16 +116,12 @@ window.buatRoom = async function() {
 
         percobaan: 0,
 
-        pemain: {
-
-            [idPemain]: {
-
-                nama: namaPemain,
-
-                percobaan: 0
-
-            }
-
+pemain: {
+    [idPemain]: {
+        nama: namaPemain,
+        percobaan: 0,
+        skor: 0
+    }
         }
 
     });
@@ -199,11 +195,9 @@ window.gabungRoom = async function() {
     await update(roomRef, {
 
         ["pemain/" + idPemain]: {
-
-            nama: namaPemain,
-
-            percobaan: 0
-
+    nama: namaPemain,
+    percobaan: 0,
+    skor: 0
         },
 
         status: "bermain"
@@ -334,7 +328,11 @@ function tampilkanPemain(pemain) {
             document.createElement("div");
 
         div.innerText =
-            "👤 " + player.nama;
+    "👤 " +
+    player.nama +
+    " — 🏆 " +
+    (player.skor || 0) +
+    " menang";
 
         tempat.appendChild(div);
 
@@ -427,6 +425,8 @@ window.kirimTebakan = async function() {
 
 
     if (tebakan === data.angkaRahasia) {
+      const skorBaru =
+    (data.pemain[idPemain]?.skor || 0) + 1;
 
         await update(roomRef, {
 
@@ -435,7 +435,8 @@ window.kirimTebakan = async function() {
             pemenang: namaPemain,
 
             ["pemain/" + idPemain + "/percobaan"]:
-                percobaan
+                percobaan,
+          ["pemain/" + idPemain + "/skor"]: skorBaru
 
         });
 
@@ -539,9 +540,10 @@ window.mulaiLagi = async function() {
 
     daftarPemain.forEach(id => {
         pemainReset[id] = {
-            nama: data.pemain[id].nama,
-            percobaan: 0
-        };
+    nama: data.pemain[id].nama,
+    percobaan: 0,
+    skor: data.pemain[id].skor || 0
+};
     });
 
     const angkaBaru =
