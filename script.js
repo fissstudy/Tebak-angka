@@ -8,9 +8,9 @@ import {
     set,
     get,
     update,
+    remove,
     onValue
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
 
 /* =========================
    FIREBASE CONFIG
@@ -484,10 +484,71 @@ function tampilkanHasil(data) {
    KELUAR ROOM
 ========================= */
 
-window.keluarRoom = function() {
+window.keluarRoom = async function() {
+
+    const roomRef = ref(
+        db,
+        "rooms/" + kodeRoomSekarang
+    );
+
+    const snapshot = await get(roomRef);
+
+    if (!snapshot.exists()) {
+        location.reload();
+        return;
+    }
+
+    const data = snapshot.val();
+    const pemain = data.pemain || {};
+    const daftarPemain = Object.keys(pemain);
+
+    // Kalau ini pemain terakhir, hapus room
+    if (daftarPemain.length <= 1) {
+        await remove(roomRef);
+        location.reload();
+        return;
+    }
+
+    // Cari pemain yang akan keluar
+    const posisiKeluar =
+        daftarPemain.indexOf(idPemain);
+
+    // Tentukan pemain berikutnya
+    const pemainBerikutnya =
+        daftarPemain[
+            (posisiKeluar + 1) %
+            daftarPemain.length
+        ];
+
+    // Hapus pemain dari database
+    await remove(
+        ref(
+            db,
+            "rooms/" +
+            kodeRoomSekarang +
+            "/pemain/" +
+            idPemain
+        )
+    );
+
+    // Kalau yang keluar sedang mendapat giliran,
+    // pindahkan giliran ke pemain berikutnya
+    if (data.giliran === idPemain) {
+        await update(roomRef, {
+            giliran: pemainBerikutnya
+        });
+    }
+
+    // Kalau tersisa satu pemain,
+    // kembalikan room ke status menunggu
+    if (daftarPemain.length === 2) {
+        await update(roomRef, {
+            status: "menunggu",
+            petunjuk: "⏳ Menunggu pemain lain..."
+        });
+    }
 
     location.reload();
-
 };
 window.mulaiLagi = async function() {
     const roomRef = ref(
