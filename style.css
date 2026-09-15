@@ -1,0 +1,127 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #dbeafe, #f8fafc);
+    color: #1e293b;
+}
+
+.container {
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+    background: white;
+    padding: 25px;
+    border-radius: 22px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #2563eb;
+    margin-bottom: 5px;
+}
+
+.container > p {
+    text-align: center;
+    color: #64748b;
+}
+
+h2 {
+    color: #1e40af;
+    margin-top: 25px;
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    margin: 7px 0;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    font-size: 16px;
+    outline: none;
+}
+
+input:focus {
+    border-color: #2563eb;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    margin: 7px 0;
+    border: none;
+    border-radius: 12px;
+    background: #2563eb;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:active {
+    transform: scale(0.97);
+}
+
+.kode {
+    text-align: center;
+    padding: 20px;
+    margin: 15px 0;
+    background: #eff6ff;
+    border-radius: 15px;
+}
+
+.kode span {
+    display: block;
+    color: #64748b;
+}
+
+.kode strong {
+    display: block;
+    font-size: 35px;
+    letter-spacing: 5px;
+    color: #2563eb;
+    margin-top: 8px;
+}
+
+#statusRoom,
+#statusGame,
+#giliran,
+#petunjuk {
+    text-align: center;
+    padding: 10px;
+}
+
+#daftarPemain {
+    background: #f8fafc;
+    padding: 15px;
+    border-radius: 12px;
+    line-height: 1.8;
+}
+
+#petunjuk {
+    background: #eff6ff;
+    border-radius: 12px;
+    color: #1d4ed8;
+}
+
+#pemenang {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 12px;
+    }
+
+    .container {
+        padding: 20px;
+    }
+}

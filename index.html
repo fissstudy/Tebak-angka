@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>🎯 Tebak Angka Mabar</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>🎯 Tebak Angka</h1>
+        <p>Multiplayer • Main bareng teman</p>
+
+        <!-- MENU ROOM -->
+        <div id="menuRoom">
+
+            <h2>🎮 Masuk Game</h2>
+
+            <input
+                type="text"
+                id="nama"
+                placeholder="Nama kamu"
+                maxlength="15"
+            >
+
+            <button onclick="buatRoom()">
+                ➕ Buat Room
+            </button>
+
+            <input
+                type="text"
+                id="kodeRoom"
+                placeholder="Kode room"
+                maxlength="6"
+            >
+
+            <button onclick="gabungRoom()">
+                🚪 Gabung Room
+            </button>
+
+            <p id="statusRoom"></p>
+
+        </div>
+
+
+        <!-- RUANG TUNGGU -->
+        <div id="ruangTunggu" style="display:none;">
+
+            <h2>🏠 Room</h2>
+
+            <div class="kode">
+                <span>Kode Room</span>
+                <strong id="tampilKode">-</strong>
+            </div>
+
+            <h3>👥 Pemain</h3>
+
+            <div id="daftarPemain">
+                Belum ada pemain.
+            </div>
+
+            <p id="statusGame">
+                Menunggu pemain lain...
+            </p>
+
+        </div>
+
+
+        <!-- GAME -->
+        <div id="game" style="display:none;">
+
+            <h2>🎯 Tebak Angka 1–100</h2>
+
+            <p id="giliran">
+                Menunggu giliran...
+            </p>
+
+            <input
+                type="number"
+                id="tebakan"
+                min="1"
+                max="100"
+                placeholder="Masukkan tebakan"
+            >
+
+            <button onclick="kirimTebakan()">
+                🎯 Tebak!
+            </button>
+
+            <h3 id="petunjuk">
+                Petunjuk akan muncul di sini
+            </h3>
+
+            <p>
+                Percobaan:
+                <strong id="percobaan">0</strong>
+            </p>
+
+            <div id="pemenang"></div>
+
+            <button onclick="keluarRoom()">
+                🚪 Keluar Room
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- Firebase -->
+    <script type="module" src="script.js"></script>
+
+</body>
+</html>
