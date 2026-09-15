@@ -513,3 +513,50 @@ window.keluarRoom = function() {
     location.reload();
 
 };
+window.mulaiLagi = async function() {
+    const roomRef = ref(
+        db,
+        "rooms/" + kodeRoomSekarang
+    );
+
+    const snapshot = await get(roomRef);
+
+    if (!snapshot.exists()) {
+        return;
+    }
+
+    const data = snapshot.val();
+
+    const daftarPemain = Object.keys(data.pemain || {});
+
+    if (daftarPemain.length < 2) {
+        return;
+    }
+
+    const giliranPertama = daftarPemain[0];
+
+    const pemainReset = {};
+
+    daftarPemain.forEach(id => {
+        pemainReset[id] = {
+            nama: data.pemain[id].nama,
+            percobaan: 0
+        };
+    });
+
+    const angkaBaru =
+        Math.floor(Math.random() * 100) + 1;
+
+    await update(roomRef, {
+        angkaRahasia: angkaBaru,
+        status: "bermain",
+        giliran: giliranPertama,
+        percobaan: 0,
+        petunjuk: "🎯 Tebak angka 1–100!",
+        pemenang: null,
+        pemain: pemainReset
+    });
+
+    document.getElementById("tebakan").value = "";
+    document.getElementById("pemenang").innerText = "";
+};
