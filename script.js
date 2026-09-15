@@ -274,6 +274,10 @@ function pantauRoom() {
                 data.giliran;
 
             updateGiliran();
+          if (data.petunjuk) {
+    document.getElementById("petunjuk").innerText =
+        data.petunjuk;
+          }
 
         } else {
 
