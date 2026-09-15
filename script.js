@@ -370,14 +370,32 @@ function updateGiliran() {
 
 window.kirimTebakan = async function() {
 
-    if (giliranPemain !== idPemain) {
+    const roomRef = ref(
+        db,
+        "rooms/" + kodeRoomSekarang
+    );
 
-        document.getElementById("petunjuk").innerText =
-            "⏳ Belum giliran kamu!";
+    const snapshot = await get(roomRef);
 
+    if (!snapshot.exists()) {
         return;
     }
 
+    const data = snapshot.val();
+
+    // CEK GAME SUDAH SELESAI
+    if (data.status === "selesai") {
+        document.getElementById("petunjuk").innerText =
+            "🏁 Game sudah selesai! Tekan Mulai Lagi.";
+        return;
+    }
+
+    // CEK GILIRAN
+    if (data.giliran !== idPemain) {
+        document.getElementById("petunjuk").innerText =
+            "⏳ Belum giliran kamu!";
+        return;
+    }
 
     const tebakan =
         Number(
@@ -386,112 +404,63 @@ window.kirimTebakan = async function() {
                 .value
         );
 
-
     if (
         !Number.isInteger(tebakan) ||
         tebakan < 1 ||
         tebakan > 100
     ) {
-
         document.getElementById("petunjuk").innerText =
             "Masukkan angka 1–100!";
-
         return;
     }
 
-
-    const roomRef =
-        ref(
-            db,
-            "rooms/" + kodeRoomSekarang
-        );
-
-
-    const snapshot =
-        await get(roomRef);
-
-
-    if (!snapshot.exists()) {
-        return;
-    }
-
-
-    const data =
-        snapshot.val();
-
-  if (data.status === "selesai") {
-    document.getElementById("petunjuk").innerText =
-        "🏁 Game sudah selesai! Tekan Mulai Lagi.";
-    return;
-  }
-
-
-    let percobaan =
+    const percobaan =
         (data.pemain[idPemain]?.percobaan || 0) + 1;
 
-
+    // JIKA JAWABAN BENAR
     if (tebakan === data.angkaRahasia) {
-      const skorBaru =
-    (data.pemain[idPemain]?.skor || 0) + 1;
+
+        const skorBaru =
+            (data.pemain[idPemain]?.skor || 0) + 1;
 
         await update(roomRef, {
-
             status: "selesai",
-
             pemenang: namaPemain,
-
             ["pemain/" + idPemain + "/percobaan"]:
                 percobaan,
-          ["pemain/" + idPemain + "/skor"]: skorBaru
-
+            ["pemain/" + idPemain + "/skor"]:
+                skorBaru
         });
-
-
-        document.getElementById("pemenang").innerText =
-            "🏆 " +
-            namaPemain +
-            " menang!";
 
         return;
     }
 
-
-    let daftarPemain =
+    // JAWABAN SALAH
+    const daftarPemain =
         Object.keys(data.pemain);
 
-
-    let posisi =
+    const posisi =
         daftarPemain.indexOf(idPemain);
 
-
-    let pemainBerikutnya =
+    const pemainBerikutnya =
         daftarPemain[
-            (posisi + 1) %
-            daftarPemain.length
+            (posisi + 1) % daftarPemain.length
         ];
 
-
-    let petunjuk =
+    const petunjuk =
         tebakan < data.angkaRahasia
             ? "⬆️ Terlalu kecil!"
             : "⬇️ Terlalu besar!";
 
-
     await update(roomRef, {
-
         giliran: pemainBerikutnya,
-
         ["pemain/" + idPemain + "/percobaan"]:
             percobaan,
-
         petunjuk: petunjuk
-
     });
 
-
     document.getElementById("tebakan").value = "";
-}
-
+};
 
 /* =========================
    HASIL GAME
