@@ -532,12 +532,20 @@ window.keluarRoom = async function() {
     );
 
     // Kalau yang keluar sedang mendapat giliran,
-    // pindahkan giliran ke pemain berikutnya
-    if (data.giliran === idPemain) {
-        await update(roomRef, {
-            giliran: pemainBerikutnya
-        });
-    }
+// pindahkan giliran ke pemain berikutnya
+if (data.giliran === idPemain) {
+    await update(roomRef, {
+        giliran: pemainBerikutnya
+    });
+}
+
+// Kalau game sudah selesai dan pemenangnya keluar,
+// hapus data pemenang juga
+if (data.status === "selesai") {
+    await update(roomRef, {
+        pemenang: null
+    });
+}
 
     // Kalau tersisa satu pemain,
     // kembalikan room ke status menunggu
