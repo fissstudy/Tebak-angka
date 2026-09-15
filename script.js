@@ -239,53 +239,69 @@ function masukTampilanRoom() {
 ========================= */
 
 function pantauRoom() {
-
-    const roomRef =
-        ref(
-            db,
-            "rooms/" + kodeRoomSekarang
-        );
-
+    const roomRef = ref(
+        db,
+        "rooms/" + kodeRoomSekarang
+    );
 
     onValue(roomRef, snapshot => {
-
         if (!snapshot.exists()) {
             return;
         }
 
-
         const data = snapshot.val();
 
+        tampilkanPemain(data.pemain);
 
-        tampilkanPemain(
-            data.pemain
-        );
+        if (data.status === "menunggu") {
+            document.getElementById("statusGame").innerText =
+                "Menunggu pemain lain...";
 
+            document.getElementById("game").style.display =
+                "none";
+
+            return;
+        }
 
         if (data.status === "bermain") {
-
             document.getElementById("statusGame").innerText =
                 "Game dimulai!";
 
             document.getElementById("game").style.display =
                 "block";
 
-            giliranPemain =
-                data.giliran;
+            giliranPemain = data.giliran;
 
             updateGiliran();
-          if (data.petunjuk) {
-    document.getElementById("petunjuk").innerText =
-        data.petunjuk;
-          }
 
-        } else {
+            if (data.petunjuk) {
+                document.getElementById("petunjuk").innerText =
+                    data.petunjuk;
+            }
 
-            document.getElementById("statusGame").innerText =
-                "Menunggu pemain lain...";
+            if (data.pemain && data.pemain[idPemain]) {
+                document.getElementById("percobaan").innerText =
+                    data.pemain[idPemain].percobaan || 0;
+            }
 
+            return;
         }
 
+        if (data.status === "selesai") {
+            document.getElementById("statusGame").innerText =
+                "🎮 Game selesai!";
+
+            document.getElementById("game").style.display =
+                "block";
+
+            document.getElementById("giliran").innerText =
+                "🏁 Permainan sudah selesai.";
+
+            document.getElementById("petunjuk").innerText =
+                "🎉 Ada pemenang!";
+
+            tampilkanHasil(data);
+        }
     });
 }
 
