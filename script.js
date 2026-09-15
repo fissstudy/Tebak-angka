@@ -419,6 +419,12 @@ window.kirimTebakan = async function() {
     const data =
         snapshot.val();
 
+  if (data.status === "selesai") {
+    document.getElementById("petunjuk").innerText =
+        "🏁 Game sudah selesai! Tekan Mulai Lagi.";
+    return;
+  }
+
 
     let percobaan =
         (data.pemain[idPemain]?.percobaan || 0) + 1;
